@@ -16,11 +16,11 @@ import subscriberRoutes from './routes/subscriber.routes.js';
 const app = express();
 
 // CORS with env-based origin
-const rawFrontendUrl = process.env.FRONTEND_URL || '';
+const rawFrontendUrl = process.env.FRONTEND_URL || "https://fliper-project-5.onrender.com";
 const FRONTEND_URL = rawFrontendUrl.replace(/\/+$/, ''); // remove trailing slash(es)
 
 app.use(cors({
-  origin: FRONTEND_URL,
+  origin: "https://fliper-project-5.onrender.com",
   credentials: true,
 }));
 
