@@ -1,4 +1,4 @@
-// src/app.js
+// src/app.js (production-only)
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -19,19 +19,12 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// Build frontend origin(s)
-const rawFrontendUrl = process.env.FRONTEND_URL || 'https://fliper-project-5.onrender.com';
+// Production frontend origin — read from env or use the deployed site as fallback
+const rawFrontendUrl = 'https://fliper-project-5.onrender.com';
 const FRONTEND_URL = rawFrontendUrl.replace(/\/+$/, ''); // remove trailing slash(es)
 
-const devOrigins = [
-  'http://localhost:5173', // Vite default
-  'http://127.0.0.1:5173',
-  'http://localhost:3000', // CRA default if used
-];
-
-const allowedOrigins = process.env.NODE_ENV === 'production'
-  ? [FRONTEND_URL]
-  : [FRONTEND_URL, ...devOrigins];
+// Only allow the production frontend origin
+const allowedOrigins = ['https://fliper-project-5.onrender.com'];
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -39,7 +32,7 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static files from /public so requests to /public/logo.svg work
 app.use('/public', express.static(path.join(__dirname, '..', 'public')));
 
-// CORS config: allow credentials and exact origins
+// CORS config: allow credentials and only the production origin
 app.use(cors({
   origin: (origin, cb) => {
     // allow non-browser requests (e.g. curl) which have no origin
