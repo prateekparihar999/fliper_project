@@ -1,0 +1,12 @@
+{
+  "name": "fliper_project",
+  "private": true,
+  "dependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "scripts": {
+    "frontend": "cd frontend && npm run frontend",
+    "backend": "cd backend && npm run backend",
+    "start": "concurrently \"npm run backend\" \"npm run frontend\""
+  }
+}
