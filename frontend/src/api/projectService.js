@@ -1,29 +1,29 @@
-// projectService.js
 import axios from './axios';
 
-// NOTE: backend expected path is /api/projects (not /projects)
 export const fetchProjects = async () => {
-  const res = await axios.get('/api/projects');
+  const res = await axios.get('/projects');
   return res.data;
 };
 
-export const fetchProjectById = async (id) => {
-  const res = await axios.get(`/api/projects/${id}`);
-  return res.data;
-};
-
-// When sending FormData, do NOT set Content-Type manually — the browser sets the boundary.
 export const addProject = async (formData) => {
-  const res = await axios.post('/api/projects', formData);
+  const res = await axios.post('/projects', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
   return res.data;
 };
 
 export const updateProject = async (id, formData) => {
-  const res = await axios.put(`/api/projects/${id}`, formData);
+  const res = await axios.put(`/projects/${id}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
   return res.data;
 };
 
 export const deleteProject = async (id) => {
-  const res = await axios.delete(`/api/projects/${id}`);
+  const res = await axios.delete(`/projects/${id}`);
   return res.data;
 };

@@ -49,7 +49,7 @@ const images = [
 
 const Details = () => {
   return (
-    <section className="max-w-7xl mx-auto px-6 sm:px-10 md:px-16 lg:px-20 py-16">
+    <section id="services" className="max-w-7xl mx-auto px-6 sm:px-10 md:px-16 lg:px-20 py-16">
       {/* Hero Section */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-12 mb-20">
         <div className="md:w-1/2">

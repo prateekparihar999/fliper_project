@@ -10,21 +10,23 @@ const AdminLogin = () => {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
     setError('');
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // ✅ REQUIRED
     setLoading(true);
     setError('');
 
     try {
-      await login(form.username, form.password);
-      navigate('/admin');
+      await login(form.username, form.password); // ✅ API CALL
+      navigate('/admin');                        // ✅ FRONTEND ROUTE
     } catch (err) {
+      console.error('LOGIN ERROR:', err);
       setError(
-        err?.response?.data?.message || 'Invalid username or password.'
+        err?.response?.data?.message || 'Invalid username or password'
       );
     } finally {
       setLoading(false);
@@ -40,15 +42,17 @@ const AdminLogin = () => {
         <div className="flex justify-center mb-5">
           <FaUserShield className="text-blue-600" size={42} />
         </div>
+
         <h2 className="text-2xl font-bold mb-2 text-center text-blue-700">
           Admin Login
         </h2>
+
         <p className="text-gray-500 text-sm text-center mb-6">
           Enter your credentials to access the dashboard
         </p>
 
         {error && (
-          <div className="bg-red-100 text-red-700 px-3 py-2 mb-4 rounded text-sm text-center animate-pulse">
+          <div className="bg-red-100 text-red-700 px-3 py-2 mb-4 rounded text-sm text-center">
             {error}
           </div>
         )}
@@ -59,7 +63,7 @@ const AdminLogin = () => {
           onChange={handleChange}
           required
           placeholder="Username"
-          className="w-full mb-4 p-3 border border-blue-200 rounded focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
+          className="w-full mb-4 p-3 border border-blue-200 rounded focus:ring-2 focus:ring-blue-400 focus:outline-none"
         />
 
         <input
@@ -69,13 +73,13 @@ const AdminLogin = () => {
           onChange={handleChange}
           required
           placeholder="Password"
-          className="w-full mb-4 p-3 border border-blue-200 rounded focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
+          className="w-full mb-4 p-3 border border-blue-200 rounded focus:ring-2 focus:ring-blue-400 focus:outline-none"
         />
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded transition disabled:opacity-60"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded disabled:opacity-60"
         >
           {loading ? 'Logging in...' : 'Login'}
         </button>

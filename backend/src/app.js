@@ -1,4 +1,3 @@
-// src/app.js (production-only)
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -19,66 +18,53 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// Production frontend origin — read from env or use the deployed site as fallback
-const rawFrontendUrl = 'https://fliper-project-5.onrender.com';
-const FRONTEND_URL = rawFrontendUrl.replace(/\/+$/, ''); // remove trailing slash(es)
-
-// Only allow the production frontend origin
-const allowedOrigins = ['https://fliper-project-5.onrender.com'];
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Serve static files from /public so requests to /public/logo.svg work
 app.use('/public', express.static(path.join(__dirname, '..', 'public')));
 
-// CORS config: allow credentials and only the production origin
+/* ===== CORS (SINGLE SOURCE OF TRUTH) ===== */
 app.use(cors({
-  origin: (origin, cb) => {
-    // allow non-browser requests (e.g. curl) which have no origin
-    if (!origin) return cb(null, true);
-    if (allowedOrigins.includes(origin)) return cb(null, true);
-    return cb(new Error('CORS: Not allowed by CORS'));
-  },
-  credentials: true,
-  optionsSuccessStatus: 200,
+  origin: process.env.FRONTEND_URL,
+  credentials: true
 }));
 
-// If your app is behind a proxy (Render, Heroku) trust it for secure cookies
-if (process.env.TRUST_PROXY === 'true' || process.env.NODE_ENV === 'production') {
+/* ===== TRUST PROXY FOR RENDER ===== */
+if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1);
 }
 
+/* ===== SESSION CONFIG ===== */
 app.use(session({
+  name: 'flipr.sid',
   secret: process.env.SESSION_SECRET || 'SecretKey',
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: (process.env.NODE_ENV === 'production'), // true in prod (requires HTTPS)
+    secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
-    maxAge: 1000 * 60 * 60 * 24, // 1 day
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // for cross-site cookies
-  },
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    maxAge: 1000 * 60 * 60 * 24
+  }
 }));
 
-// API routes (keep '/api' prefix so frontend can call /api/...)
-app.use('/api/auth',        authRoutes);
-app.use('/api/projects',    projectRoutes);
-app.use('/api/clients',     clientRoutes);
-app.use('/api/contacts',    contactRoutes);
+/* ===== ROUTES ===== */
+app.use('/api/auth', authRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api/clients', clientRoutes);
+app.use('/api/contacts', contactRoutes);
 app.use('/api/subscribers', subscriberRoutes);
 
-// healthcheck & root
-app.get('/', (_req, res) => res.send('✅ Flipr MERN backend is up!'));
+app.get('/', (_req, res) => {
+  res.send('✅ Flipr MERN backend is running');
+});
 
-// basic error handler for CORS errors to help debugging
+/* ===== ERROR HANDLER ===== */
 app.use((err, _req, res, _next) => {
-  if (err?.message?.startsWith('CORS')) {
-    console.error('CORS error:', err.message);
-    return res.status(403).json({ success: false, message: err.message });
-  }
   console.error(err);
-  res.status(500).json({ success: false, message: 'Internal Server Error' });
+  res.status(500).json({
+    success: false,
+    message: 'Internal Server Error'
+  });
 });
 
 export default app;

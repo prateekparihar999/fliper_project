@@ -1,13 +1,10 @@
-// frontend/src/api/axios.js  (CRA)
+// frontend/src/api/axios.js
 import axios from 'axios';
 
-// const DEFAULT_LOCAL = 'http://localhost:5000';
-const baseURL = "https://fliper-project-4.onrender.com" || 'http://localhost:5000';
-
 const axiosInstance = axios.create({
-  baseURL,
+  baseURL: 'http://localhost:5000/api', // 🔥 MUST include /api
   withCredentials: true,
-  timeout: 10000,
+  timeout: 10000
 });
 
 export default axiosInstance;

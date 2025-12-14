@@ -33,31 +33,35 @@ const ProjectsCarousel = () => {
   }, []);
 
   const maxIndex = Math.max(0, projects.length - cardsPerView);
-  const prev = () => setCurrent((c) => Math.max(0, c - 1));
-  const next = () => setCurrent((c) => Math.min(maxIndex, c + 1));
+  const prev = () => setCurrent(c => Math.max(0, c - 1));
+  const next = () => setCurrent(c => Math.min(maxIndex, c + 1));
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-12 sm:py-16">
-      {/* Title */}
-      <div className="text-center max-w-xl mx-auto mb-1">
-        <h2 className="text-blue-700 font-extrabold text-2xl sm:text-3xl md:text-4xl leading-tight">
+    <section id="projects" className="max-w-7xl mx-auto px-4 pt-2 pb-12 sm:pt-4 sm:pb-16">
+      
+      {/* Heading */}
+      <div className="text-center max-w-xl mx-auto mb-4 ">
+        <h2 className="text-blue-700 font-extrabold text-2xl sm:text-3xl md:text-4xl">
           Our Projects
         </h2>
       </div>
 
-      {/* ==== CAROUSEL SECTION ==== */}
-      <div className="relative mb-4"> {/* Reduced gap from mb-16 → mb-4 */}
+      {/* Description */}
+      <p className="mt-2 mb-8 text-center text-gray-700 text-sm sm:text-base md:text-lg">
+        We know what buyers are looking for and suggest projects that will bring clients top dollar for the sale of their homes.
+      </p>
+
+      {/* Carousel */}
+      <div className="relative mb-10">
         <div className="flex items-center">
-          
-          {/* Left Button */}
+
+          {/* Left Arrow */}
           <button
             onClick={prev}
             disabled={current === 0}
-            className="hidden md:flex items-center justify-center w-11 h-11 rounded-full bg-white/90 shadow text-blue-700 hover:bg-blue-700 hover:text-white transition disabled:opacity-30 mr-2 border border-blue-100"
+            className="hidden md:flex items-center justify-center w-11 h-11 rounded-full bg-white shadow text-blue-700 hover:bg-blue-700 hover:text-white disabled:opacity-30 mr-2"
           >
-            <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth={2}>
-              <path d="M13 17l-5-5 5-5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            ‹
           </button>
 
           {/* Cards */}
@@ -65,15 +69,15 @@ const ProjectsCarousel = () => {
             <div
               className="flex transition-transform duration-500"
               style={{
-                transform: `translateX(-${(current * (100 / cardsPerView))}%)`,
-                width: `${(projects.length * 100) / cardsPerView}%`,
+                transform: `translateX(-${current * (100 / cardsPerView)}%)`,
+                width: `${(projects.length * 100) / cardsPerView}%`
               }}
             >
               {projects.map((project, idx) => (
                 <div
                   key={project._id || idx}
                   className="px-3 py-2"
-                  style={{ width: `${100 / projects.length}%`, minWidth: 0 }}
+                  style={{ width: `${100 / cardsPerView}%` }}
                 >
                   <ProjectCard
                     imageUrl={project.imageUrl}
@@ -81,85 +85,25 @@ const ProjectsCarousel = () => {
                     description={project.description}
                     location={project.location}
                     createdAt={project.createdAt}
-                    onReadMore={() => alert(`Read more about ${project.projectName}`)}
+                    onReadMore={() =>
+                      window.scrollTo({ top: 0, behavior: 'smooth' })
+                    }
                   />
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Right Button */}
+          {/* Right Arrow */}
           <button
             onClick={next}
             disabled={current === maxIndex}
-            className="hidden md:flex items-center justify-center w-11 h-11 rounded-full bg-white/90 shadow text-blue-700 hover:bg-blue-700 hover:text-white transition disabled:opacity-30 ml-2 border border-blue-100"
+            className="hidden md:flex items-center justify-center w-11 h-11 rounded-full bg-white shadow text-blue-700 hover:bg-blue-700 hover:text-white disabled:opacity-30 ml-2"
           >
-            <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth={2}>
-              <path d="M7 7l5 5-5 5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            ›
           </button>
 
         </div>
-      </div>
-
-      {/* Description BEFORE card section */}
-      <p className="mt-2 mb-4 text-center text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed">
-        We know what buyers are looking for and suggest projects that will bring clients top dollar for the sale of their homes.
-      </p>
-
-      {/* ==== STATIC CARD GRID SECTION (NEW) ==== */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-        
-        {/* Card 1 */}
-        <div className="bg-white rounded-lg shadow p-4">
-          <img src="img/pexels-andres-ayrton-6578391.svg" className="w-full h-40 object-cover rounded mb-3" />
-          <h3 className="text-lg font-semibold mb-1">Luxury Apartment</h3>
-          <p className="text-sm text-gray-600 mb-2">
-            Modern, high-rise apartment with city views and luxury amenities.
-          </p>
-          <button className="bg-blue-600 text-white px-4 py-1 rounded text-sm">Read More</button>
-        </div>
-
-        {/* Card 2 */}
-        <div className="bg-white rounded-lg shadow p-4">
-          <img src="img/pexels-brett-sayles-2881232-1.svg" className="w-full h-40 object-cover rounded mb-3" />
-          <h3 className="text-lg font-semibold mb-1">Eco-Friendly Villa</h3>
-          <p className="text-sm text-gray-600 mb-2">
-            Sustainable villa built with eco-materials in a peaceful forest setting.
-          </p>
-          <button className="bg-blue-600 text-white px-4 py-1 rounded text-sm">Read More</button>
-        </div>
-
-        {/* Card 3 */}
-        <div className="bg-white rounded-lg shadow p-4">
-          <img src="img/pexels-brett-sayles-2881232-2.svg" className="w-full h-40 object-cover rounded mb-3" />
-          <h3 className="text-lg font-semibold mb-1">Modern Studio</h3>
-          <p className="text-sm text-gray-600 mb-2">
-            Compact and stylish studio apartment perfect for young professionals.
-          </p>
-          <button className="bg-blue-600 text-white px-4 py-1 rounded text-sm">Read More</button>
-        </div>
-
-        {/* Card 4 */}
-        <div className="bg-white rounded-lg shadow p-4">
-          <img src="img/pexels-fauxels-3182834.svg" className="w-full h-40 object-cover rounded mb-3" />
-          <h3 className="text-lg font-semibold mb-1">Business Center</h3>
-          <p className="text-sm text-gray-600 mb-2">
-            Innovative office spaces with coworking facilities and modern design.
-          </p>
-          <button className="bg-blue-600 text-white px-4 py-1 rounded text-sm">Read More</button>
-        </div>
-
-        {/* Card 5 */}
-        <div className="bg-white rounded-lg shadow p-4">
-          <img src="img/pexels-brett-sayles-2881232.svg" className="w-full h-40 object-cover rounded mb-3" />
-          <h3 className="text-lg font-semibold mb-1">Consultancy & Marketing</h3>
-          <p className="text-sm text-gray-600 mb-2">
-            Expert marketing team providing strategy, branding, and digital growth solutions.
-          </p>
-          <button className="bg-blue-600 text-white px-4 py-1 rounded text-sm">Read More</button>
-        </div>
-
       </div>
     </section>
   );

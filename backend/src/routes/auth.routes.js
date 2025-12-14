@@ -1,24 +1,23 @@
 import express from 'express';
 import {
-  login,
   register,
-  checkAuth,
+  login,
   logout,
+  checkAuth,
   getAllUsers,
   deleteUser,
   updateUser
 } from '../controllers/auth.controller.js';
-import { requireAuth } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
+router.post('/register', register);   // ✅ NO requireAuth
 router.post('/login', login);
-router.post('/register', requireAuth, register);
 router.post('/logout', logout);
 router.get('/check', checkAuth);
 
-router.get('/users', requireAuth, getAllUsers);
-router.delete('/users/:id', requireAuth, deleteUser);
-router.put('/users/:id', requireAuth, updateUser);
+router.get('/users', getAllUsers);
+router.delete('/users/:id', deleteUser);
+router.put('/users/:id', updateUser);
 
 export default router;

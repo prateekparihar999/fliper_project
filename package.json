@@ -3,5 +3,10 @@
   "private": true,
   "dependencies": {
     "concurrently": "^9.2.1"
+  },
+  "scripts": {
+    "client": "cd frontend && npm run frontend",
+    "server": "cd backend && npm run backend",
+    "start": "concurrently \"npm run server\" \"npm run client\""
   }
 }

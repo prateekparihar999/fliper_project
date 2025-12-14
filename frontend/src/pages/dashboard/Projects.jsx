@@ -78,23 +78,35 @@ const Projects = () => {
     e.preventDefault();
     setLoading(true);
 
-    /* Build multipart body */
-    const fd = new FormData();
-    Object.keys(form).forEach(key => {
-      if (key === 'existingImageUrl') return;          // never send this
-      if (key === 'image' && !form.image) return;      // skip if no new pic
-      if (form[key]) fd.append(key, form[key]);
-    });
+ try {
+      const fd = new FormData();
 
-    if (editingId) {
-      await updateProject(editingId, fd);
-    } else {
-      await addProject(fd);
+      fd.append('projectName', form.projectName);
+      fd.append('description', form.description);
+      fd.append('location', form.location);
+      fd.append('category', form.category);
+
+      // ✅ VERY IMPORTANT FIX
+    if (form.image) {
+      fd.append('image', form.image, 'project.jpg');
     }
 
-    await fetchProjects().then(setProjects);
-    resetForm();
-    setLoading(false);
+      if (editingId) {
+        await updateProject(editingId, fd);
+      } else {
+        await addProject(fd);
+      }
+
+      const updated = await fetchProjects();
+      setProjects(updated);
+      resetForm();
+    } catch (err) {
+      console.error('Project submit failed:', err);
+      alert('Failed to save project. Please try again.');
+    } finally {
+      // ✅ FIX 1: loading ALWAYS stops
+      setLoading(false);
+    }
   };
 
   const handleDelete = async id => {
